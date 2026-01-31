@@ -1,0 +1,19 @@
+[
+  {
+    "file": "node/main.cpp",
+    "arguments": [
+      "c++",
+      "-std=c++17",
+      "-Wall",
+      "-Wextra",
+      "-pedantic",
+      "-Ideps",
+      "-o",
+      "build/node_server",
+      "node/main.cpp",
+      "-pthread"
+    ],
+    "directory": "/Users/vutran/Documents/my_learning/side_project/chat_app/server",
+    "output": "build/node_server"
+  }
+]
