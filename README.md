@@ -1,12 +1,3 @@
-# Server
+# chat_app
 
-```
-  How to use it now
-
-  1. Make the script executable:
-      - chmod +x scripts/bootstrap_vcpkg.sh
-  2. Run it:
-      - ./scripts/bootstrap_vcpkg.sh
-  3. Build:
-      - VCPKG_ROOT="$(pwd)/tools/vcpkg" make -C server all
-```
+Goal: Build a distributed WebSocket system where backend services publish events to a broker (e.g., ZeroMQ), the broker propagates notifications across services, and WebSocket servers fan out updates to connected clients.

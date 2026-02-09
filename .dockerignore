@@ -1,0 +1,5 @@
+.git
+.vscode
+server/build
+server/vcpkg_installed
+tools/vcpkg

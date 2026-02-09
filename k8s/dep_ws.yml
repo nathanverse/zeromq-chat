@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat-ws
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: chat-ws
+  template:
+    metadata:
+      labels:
+        app: chat-ws
+    spec:
+      containers:
+        - name: chat-ws
+          image: ghcr.io/your-org/chat-ws:1.0.0   # <-- HERE
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ZMQ_BROKER_ADDR
+              value: "tcp://zmq-broker.default.svc.cluster.local:5555"
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
