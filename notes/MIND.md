@@ -33,3 +33,18 @@
 
   - Clients should retry with exponential backoff.
   - Allow “resume” by accepting a last‑event ID if you use it.
+
+
+  ## Building
+
+  - Port mismatch everywhere: the server listens on 9002, but Deployment uses 8080 and Service routes to 8080. Ingress routes to Service port 80 →
+    targetPort 8080. Unless you changed the server, traffic won’t reach it.
+  - Health probes are HTTP /healthz, but your server doesn’t expose HTTP. These probes will fail and kill pods.
+  - Ingress path /ws expects the WS server to accept /ws (or you need a rewrite). Your server currently accepts on / by default unless you enforce a
+    path.
+  - No readiness/liveness for a TCP-only server: should use tcpSocket on the WS port or add a small HTTP health endpoint.
+
+  Optional but recommended
+
+  - Add terminationGracePeriodSeconds and a preStop hook to stop accepting new connections before SIGTERM, for graceful WS disconnects.
+  - Add resource requests/limits.

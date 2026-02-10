@@ -4,6 +4,7 @@
 #include <chrono>
 #include <iostream>
 #include <map>
+#include <string>
 
 typedef websocketpp::server<websocketpp::config::asio> server;
 
@@ -22,6 +23,9 @@ public:
 
       server_.init_asio();
 
+      server_.set_validate_handler(
+          bind(&ConnectionManager::on_validate, this, ::_1));
+      server_.set_http_handler(bind(&ConnectionManager::on_http, this, ::_1));
       server_.set_open_handler(bind(&ConnectionManager::on_open, this, ::_1));
       server_.set_close_handler(bind(&ConnectionManager::on_close, this, ::_1));
       server_.set_fail_handler(bind(&ConnectionManager::on_close, this, ::_1));
@@ -47,6 +51,34 @@ private:
 
   static constexpr long kPingIntervalMs = 25000;
   static constexpr long kPongTimeoutMs = 60000;
+
+  bool on_validate(websocketpp::connection_hdl hdl) {
+    websocketpp::lib::error_code ec;
+    server::connection_ptr con = server_.get_con_from_hdl(hdl, ec);
+    if (ec) {
+      return false;
+    }
+    if (con->get_resource() != "/ws") {
+      con->set_status(websocketpp::http::status_code::not_found);
+      return false;
+    }
+    return true;
+  }
+
+  void on_http(websocketpp::connection_hdl hdl) {
+    websocketpp::lib::error_code ec;
+    server::connection_ptr con = server_.get_con_from_hdl(hdl, ec);
+    if (ec) {
+      return;
+    }
+    if (con->get_resource() == "/healthz") {
+      con->set_status(websocketpp::http::status_code::ok);
+      con->set_body("ok");
+      return;
+    }
+    con->set_status(websocketpp::http::status_code::not_found);
+    con->set_body("not found");
+  }
 
   void on_open(websocketpp::connection_hdl hdl) {
     connections_[hdl] = clock::now();
@@ -117,5 +149,5 @@ private:
 
 int main() {
   ConnectionManager manager;
-  manager.run(9002);
+  manager.run(8080);
 }

@@ -12,9 +12,10 @@ spec:
       labels:
         app: chat-ws
     spec:
+      terminationGracePeriodSeconds: 30
       containers:
         - name: chat-ws
-          image: ghcr.io/your-org/chat-ws:1.0.0   # <-- HERE
+          image: chat-ws:1.0.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -33,3 +34,14 @@ spec:
               port: 8080
             initialDelaySeconds: 10
             periodSeconds: 10
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
