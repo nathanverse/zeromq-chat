@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -79,6 +80,16 @@ func (m *ConnectionManager) handleWS(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
+
+	podName := os.Getenv("POD_NAME")
+	if podName == "" {
+		podName = "unknown"
+	}
+	podIP := os.Getenv("POD_IP")
+	if podIP == "" {
+		podIP = "unknown"
+	}
+	log.Printf("ws connected pod=%s ip=%s remote=%s", podName, podIP, r.RemoteAddr)
 
 	state := &connState{
 		conn: conn,

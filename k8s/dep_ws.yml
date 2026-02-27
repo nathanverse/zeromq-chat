@@ -15,13 +15,21 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
         - name: chat-ws
-          image: chat-ws:1.0.0
+          image: chat-ws:1.0.1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
           env:
             - name: ZMQ_BROKER_ADDR
               value: "tcp://zmq-broker.default.svc.cluster.local:5555"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
           readinessProbe:
             httpGet:
               path: /healthz
