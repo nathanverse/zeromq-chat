@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zmq-broker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zmq-broker
+  template:
+    metadata:
+      labels:
+        app: zmq-broker
+    spec:
+      containers:
+        - name: zmq-broker
+          image: zmq-broker:1.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: xsub
+              containerPort: 5556
+            - name: xpub
+              containerPort: 5557
+          env:
+            - name: XSUB_BIND_ADDR
+              value: "tcp://*:5556"
+            - name: XPUB_BIND_ADDR
+              value: "tcp://*:5557"
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "250m"
+              memory: "128Mi"

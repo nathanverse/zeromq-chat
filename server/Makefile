@@ -1,5 +1,6 @@
 CXX ?= g++
-CXXFLAGS ?= -std=c++17 -Wall -Wextra -pedantic -DASIO_STANDALONE
+CXXSTD ?= -std=c++23
+CXXFLAGS ?= $(CXXSTD) -Wall -Wextra -pedantic -DASIO_STANDALONE
 
 UNAME_S := $(shell uname -s)
 SRC_DIR := node

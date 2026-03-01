@@ -1,20 +1,21 @@
 [
   {
-    "file": "node/main.cpp",
     "arguments": [
-      "c++",
-      "-std=c++17",
+      "/usr/bin/c++",
+      "-c",
+      "-std=c++23",
       "-Wall",
       "-Wextra",
       "-pedantic",
       "-DASIO_STANDALONE",
-      "-I/Users/vutran/Documents/my_learning/side_project/chat_app/server/vcpkg_installed/arm64-osx/include",
+      "-I/Users/knorexvn/Documents/side/zeromq-chat/server/vcpkg_installed/arm64-osx/include",
+      "-pthread",
       "-o",
       "build/node_server",
-      "node/main.cpp",
-      "-pthread"
+      "node/main.cpp"
     ],
-    "directory": "/Users/vutran/Documents/my_learning/side_project/chat_app/server",
-    "output": "build/node_server"
+    "directory": "/Users/knorexvn/Documents/side/zeromq-chat/server",
+    "file": "/Users/knorexvn/Documents/side/zeromq-chat/server/node/main.cpp",
+    "output": "/Users/knorexvn/Documents/side/zeromq-chat/server/build/node_server"
   }
 ]

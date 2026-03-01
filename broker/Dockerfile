@@ -1,4 +1,4 @@
-FROM golang:1.21-bookworm AS build
+FROM golang:1.25-bookworm AS build
 
 WORKDIR /src
 
@@ -12,7 +12,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY main.go ./
-RUN CGO_ENABLED=1 GOOS=linux go build -trimpath -ldflags="-s -w" -o /out/chat-ws .
+RUN CGO_ENABLED=1 GOOS=linux go build -trimpath -ldflags="-s -w" -o /out/zmq-broker .
 
 FROM debian:bookworm-slim
 
@@ -25,9 +25,9 @@ RUN apt-get update \
     && useradd --system --gid app --no-create-home app
 
 WORKDIR /app
-COPY --from=build /out/chat-ws /app/chat-ws
+COPY --from=build /out/zmq-broker /app/zmq-broker
 
 USER app
-EXPOSE 8080
+EXPOSE 5556 5557
 
-CMD ["/app/chat-ws"]
+CMD ["/app/zmq-broker"]

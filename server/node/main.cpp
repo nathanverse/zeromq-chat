@@ -1,3 +1,5 @@
+#include <unordered_map>
+#include <utility>
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
 
@@ -52,16 +54,49 @@ private:
   static constexpr long kPingIntervalMs = 25000;
   static constexpr long kPongTimeoutMs = 60000;
 
+  enum class ParseErr { MissingEqual, MultipleEqual, EmptyKey, EmptyValue };
+  // std::pair<std::string, std::string> & parseParam(std::string param) {
+  //   if (param.empty()){
+  //     return;
+  //   }
+  //   std::string key, value;
+  //   int equalIndex = 0;
+  //   for (size_t i = 0; i < param.size() ; i++) {
+  //     if (equalIndex != 0) {
+  //       value += param[i];  
+  //     } else {
+  //       key += param[i];
+  //     }
+  //   } 
+  // }
+  // std::unordered_map<std::string, std::string> & parseQuery(std::string query){
+  //   std::string element;
+  //   for (size_t i = 0; i < query.size() ; i++) {
+  //     if query[i] == '&' {
+  //       parseParam()  
+  //     }
+  //     element += query[i];
+      
+  //   }
+  // }
+
   bool on_validate(websocketpp::connection_hdl hdl) {
     websocketpp::lib::error_code ec;
     server::connection_ptr con = server_.get_con_from_hdl(hdl, ec);
     if (ec) {
       return false;
     }
-    if (con->get_resource() != "/ws") {
+
+    auto uri = con -> get_uri();
+
+    if (!uri && uri->get_resource() != "/ws") {
       con->set_status(websocketpp::http::status_code::not_found);
       return false;
     }
+
+    auto query = uri -> get_query();
+
+    
     return true;
   }
 

@@ -20,8 +20,10 @@ spec:
           ports:
             - containerPort: 8080
           env:
-            - name: ZMQ_BROKER_ADDR
-              value: "tcp://zmq-broker.default.svc.cluster.local:5555"
+            - name: ZMQ_BROKER_PUB_ADDR
+              value: "tcp://zmq-broker.default.svc.cluster.local:5556"
+            - name: ZMQ_BROKER_SUB_ADDR
+              value: "tcp://zmq-broker.default.svc.cluster.local:5557"
             - name: POD_NAME
               valueFrom:
                 fieldRef:

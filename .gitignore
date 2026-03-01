@@ -1,3 +1,5 @@
 tools
 .vscode
 vcpkg_installed/
+
+.cache
