@@ -3,3 +3,5 @@ tools
 vcpkg_installed/
 
 .cache
+
+vendor
